@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Pop - Stress Buster</title>
+    <meta name="description" content="A satisfying bubble popping game to relieve stress">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">
+                <span class="bubble-icon">🫧</span>
+                Bubble Pop
+            </h1>
+            <p class="subtitle">Pop bubbles. Relax. Repeat.</p>
+        </header>
+
+        <!-- Score Display -->
+        <div class="score-panel">
+            <div class="score-item">
+                <span class="score-label">Pops</span>
+                <span class="score-value" id="popCount">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Combo</span>
+                <span class="score-value combo" id="comboCount">x1</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Best</span>
+                <span class="score-value" id="bestScore">0</span>
+            </div>
+        </div>
+
+        <!-- Canvas Game Area -->
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            <div class="ripple-container" id="rippleContainer"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">
+                <span class="btn-icon">▶</span>
+                Start Game
+            </button>
+            <button class="btn btn-secondary" id="pauseBtn" disabled>
+                <span class="btn-icon">⏸</span>
+                Pause
+            </button>
+        </div>
+
+        <!-- Settings -->
+        <div class="settings">
+            <div class="setting-item">
+                <label>Bubble Speed</label>
+                <input type="range" id="speedSlider" min="1" max="5" value="2">
+            </div>
+            <div class="setting-item">
+                <label>Bubble Size</label>
+                <input type="range" id="sizeSlider" min="1" max="5" value="3">
+            </div>
+            <div class="setting-item">
+                <label>
+                    <input type="checkbox" id="soundToggle" checked>
+                    Sound Effects
+                </label>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Click the bubbles to pop them! 🎈</p>
+        </footer>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
