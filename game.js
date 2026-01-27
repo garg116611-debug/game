@@ -104,10 +104,12 @@ class BubblePopGame {
         if (this.isRunning) {
             this.stop();
             startBtn.innerHTML = '<span class="btn-icon">▶</span> Start Game';
+            startBtn.classList.add('pulse');
             pauseBtn.disabled = true;
         } else {
             this.start();
             startBtn.innerHTML = '<span class="btn-icon">■</span> Stop Game';
+            startBtn.classList.remove('pulse');
             pauseBtn.disabled = false;
         }
     }
@@ -196,7 +198,11 @@ class BubblePopGame {
     }
 
     handleClick(e) {
-        if (!this.isRunning || this.isPaused) return;
+        if (!this.isRunning) {
+            this.toggleStart();
+            return;
+        }
+        if (this.isPaused) return;
 
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -445,11 +451,11 @@ class BubblePopGame {
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         this.ctx.font = '20px Outfit';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('Press "Start Game" to begin!', this.width / 2, this.height / 2);
+        this.ctx.fillText('Click here or "Start Game" to begin!', this.width / 2, this.height / 2);
 
         this.ctx.font = '14px Outfit';
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        this.ctx.fillText('Click or tap bubbles to pop them', this.width / 2, this.height / 2 + 30);
+        this.ctx.fillText('Pop bubbles to relieve stress ✨', this.width / 2, this.height / 2 + 30);
     }
 
     drawPausedOverlay() {
@@ -466,4 +472,6 @@ class BubblePopGame {
 // Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const game = new BubblePopGame();
+    // Add initial pulse to start button
+    document.getElementById('startBtn').classList.add('pulse');
 });

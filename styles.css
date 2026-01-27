@@ -1,7 +1,7 @@
 /* ============================================
    Bubble Pop - Stress Buster Styles
-   Version: 1.0.3
-   Last Updated: 2026-01-19
+   Version: 1.1.0
+   Last Updated: 2026-01-27
    ============================================ */
 
 * {
@@ -285,6 +285,24 @@ body {
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 30px var(--primary-glow);
+}
+
+.btn-primary.pulse:not(:disabled) {
+    animation: btnPulse 2s infinite;
+}
+
+@keyframes btnPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(168, 85, 247, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+    }
 }
 
 .btn-secondary {
