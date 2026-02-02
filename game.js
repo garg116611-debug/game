@@ -22,6 +22,9 @@ class BubblePopGame {
         this.combo = 1;
         this.comboTimer = null;
         this.bestScore = parseInt(localStorage.getItem('bubblePopBest')) || 0;
+        this.streak = 0;
+        this.streakPops = [];
+        this.highScoreCelebrated = false;
 
         // Settings
         this.settings = {
@@ -144,6 +147,9 @@ class BubblePopGame {
         }
         this.bubbles = [];
         this.particles = [];
+        this.streak = 0;
+        this.streakPops = [];
+        this.highScoreCelebrated = false;
         this.render();
     }
 
@@ -157,6 +163,51 @@ class BubblePopGame {
     resume() {
         this.isPaused = false;
         this.spawnBubbles();
+    }
+
+    updateStreak() {
+        const now = Date.now();
+        this.streakPops.push(now);
+
+        // Remove pops older than 5 seconds
+        this.streakPops = this.streakPops.filter(time => now - time < 5000);
+        this.streak = this.streakPops.length;
+    }
+
+    celebrateHighScore(x, y) {
+        // Create confetti explosion
+        for (let i = 0; i < 50; i++) {
+            const angle = (Math.PI * 2 / 50) * i;
+            const velocity = 5 + Math.random() * 5;
+            const color = this.colors[Math.floor(Math.random() * this.colors.length)];
+
+            this.particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * velocity,
+                vy: Math.sin(angle) * velocity - 3,
+                size: 5 + Math.random() * 8,
+                color: color.main,
+                life: 1,
+                decay: 0.01
+            });
+        }
+
+        // Show celebration text
+        const text = document.createElement('div');
+        text.className = 'pop-text celebration';
+        text.textContent = '🎉 NEW HIGH SCORE! 🎉';
+        text.style.left = x + 'px';
+        text.style.top = y - 50 + 'px';
+        text.style.fontSize = '24px';
+        text.style.fontWeight = 'bold';
+        text.style.color = '#f472b6';
+        text.style.textShadow = '0 0 20px rgba(244, 114, 182, 0.8)';
+
+        const wrapper = this.canvas.parentElement;
+        wrapper.appendChild(text);
+
+        setTimeout(() => text.remove(), 2000);
     }
 
     spawnBubbles() {
@@ -230,10 +281,22 @@ class BubblePopGame {
         this.popCount++;
         this.updateCombo();
 
+        // Update streak
+        this.updateStreak();
+
+        // Check for new high score
+        const wasHighScore = this.popCount > this.bestScore;
+
         // Update best score
         if (this.popCount > this.bestScore) {
             this.bestScore = this.popCount;
             localStorage.setItem('bubblePopBest', this.bestScore);
+
+            // Celebrate new high score
+            if (!this.highScoreCelebrated) {
+                this.celebrateHighScore(bubble.x, bubble.y);
+                this.highScoreCelebrated = true;
+            }
         }
 
         this.updateDisplay();
@@ -242,6 +305,11 @@ class BubblePopGame {
         soundManager.playPop(0.8 + (bubble.size / 100));
         if (this.combo > 2) {
             soundManager.playCombo(this.combo);
+        }
+
+        // Extra sound for high score
+        if (wasHighScore) {
+            soundManager.playCombo(5);
         }
 
         // Create particle explosion
@@ -320,6 +388,19 @@ class BubblePopGame {
         document.getElementById('popCount').textContent = this.popCount;
         document.getElementById('comboCount').textContent = `x${this.combo}`;
         document.getElementById('bestScore').textContent = this.bestScore;
+
+        // Update streak display
+        const streakEl = document.getElementById('streakCount');
+        if (streakEl) {
+            streakEl.textContent = this.streak;
+            if (this.streak > 5) {
+                streakEl.style.color = '#f472b6';
+                streakEl.style.textShadow = '0 0 10px rgba(244, 114, 182, 0.6)';
+            } else {
+                streakEl.style.color = '';
+                streakEl.style.textShadow = '';
+            }
+        }
 
         // Animate combo display when high
         const comboEl = document.getElementById('comboCount');
